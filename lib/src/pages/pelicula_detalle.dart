@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:peliculas/src/models/actores_model.dart';
 import 'package:peliculas/src/models/pelicula_model.dart';
 import 'package:peliculas/src/providers/peliculas_provider.dart';
+import 'package:peliculas/src/theme/dark_theme.dart';
 
 class PeliculaDetalle extends StatelessWidget {
   @override
@@ -34,7 +35,7 @@ class PeliculaDetalle extends StatelessWidget {
   Widget _createAppBar(Pelicula pelicula) {
     return SliverAppBar(
       elevation: 2.0,
-      backgroundColor: Colors.indigo,
+      backgroundColor: darkTheme.accentColor,
       expandedHeight: 200.0,
       floating: false,
       pinned: true,

@@ -47,7 +47,7 @@ class MoviePosterImage extends StatelessWidget {
       child: Hero(
         tag: pelicula.uniqueIdBanner,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(25),
           child: FadeInImage(
             placeholder: AssetImage('assets/img/loading.gif'),
             image: NetworkImage(
