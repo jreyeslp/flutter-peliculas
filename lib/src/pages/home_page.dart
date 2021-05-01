@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:peliculas/src/models/pelicula_model.dart';
 import 'package:peliculas/src/providers/peliculas_provider.dart';
 import 'package:peliculas/src/search/search_delegate.dart';
+import 'package:peliculas/src/theme/dark_theme.dart';
 import 'package:peliculas/src/widgets/card_swiper_widget.dart';
 import 'package:peliculas/src/widgets/movie_horizontal.dart';
 
@@ -15,7 +17,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: false,
         title: Text('Películas en cines'),
-        backgroundColor: Colors.indigoAccent,
+        backgroundColor: darkTheme.accentColor,
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.search),
@@ -44,7 +46,7 @@ class HomePage extends StatelessWidget {
       future: provider.getNowPlayingMovies(),
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
         if (snapshot.hasData) {
-          return CardSwiper(peliculas: snapshot.data);
+          return CardSwiper(peliculas: snapshot.data as List<Pelicula>);
         } else {
           return Container(
             height: 400.0,
@@ -78,7 +80,7 @@ class HomePage extends StatelessWidget {
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (snapshot.hasData) {
                 return MovieHorizontal(
-                  peliculas: snapshot.data,
+                  peliculas: snapshot.data as List<Pelicula>?,
                   nextPage: provider.getPopularMovies,
                 );
               } else {

@@ -12,18 +12,18 @@ class Cast {
 }
 
 class Actor {
-  bool adult;
-  int gender;
-  int id;
-  String name;
-  String originalName;
-  double popularity;
-  String profilePath;
-  int castId;
-  String character;
-  String creditId;
-  int order;
-  String job;
+  bool? adult;
+  int? gender;
+  int? id;
+  String? name;
+  String? originalName;
+  double? popularity;
+  String? profilePath;
+  int? castId;
+  String? character;
+  String? creditId;
+  int? order;
+  String? job;
 
   Actor({
     this.adult,

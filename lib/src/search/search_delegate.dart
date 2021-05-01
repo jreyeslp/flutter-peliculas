@@ -62,7 +62,7 @@ class MovieSearch extends SearchDelegate {
         builder:
             (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
           if (snapshot.hasData) {
-            final movies = snapshot.data;
+            final movies = snapshot.data!;
 
             return ListView(
               children: movies.map((movie) {
@@ -75,10 +75,9 @@ class MovieSearch extends SearchDelegate {
                     width: 50.0,
                     fit: BoxFit.contain,
                   ),
-                  title: Text(movie.title),
+                  title: Text(movie.title!),
                   onTap: () {
                     close(context, null);
-                    movie.uniqueId = '';
                     Navigator.pushNamed(
                       context,
                       'detalle',

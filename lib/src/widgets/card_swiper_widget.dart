@@ -1,45 +1,60 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+
 import 'package:peliculas/src/models/pelicula_model.dart';
 
 class CardSwiper extends StatelessWidget {
   final List<Pelicula> peliculas;
 
-  CardSwiper({@required this.peliculas});
+  CardSwiper({required this.peliculas});
 
   @override
   Widget build(BuildContext context) {
     final _screenSize = MediaQuery.of(context).size;
 
-    return Container(
-      padding: EdgeInsets.only(top: 10.0),
-      child: Swiper(
-        itemBuilder: (BuildContext context, int index) {
-          peliculas[index].uniqueId = '${peliculas[index].id}-swiper';
-          return Hero(
-            tag: peliculas[index].uniqueId,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: GestureDetector(
-                child: FadeInImage(
-                  image: NetworkImage(
-                    peliculas[index].getPosterImg(),
-                  ),
-                  placeholder: AssetImage('assets/img/no-image.jpg'),
-                  fit: BoxFit.cover,
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, 'detalle',
-                      arguments: peliculas[index]);
-                },
-              ),
+    return CarouselSlider.builder(
+      itemCount: this.peliculas.length,
+      itemBuilder: (context, index, realIndex) => MoviePosterImage(
+        pelicula: this.peliculas[index],
+      ),
+      options: CarouselOptions(
+        autoPlay: true,
+        height: 500,
+        viewportFraction: 0.8,
+        enlargeCenterPage: true,
+        enableInfiniteScroll: true,
+      ),
+    );
+  }
+}
+
+class MoviePosterImage extends StatelessWidget {
+  final Pelicula pelicula;
+
+  const MoviePosterImage({
+    Key? key,
+    required this.pelicula,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(
+        context,
+        'detalle',
+        arguments: this.pelicula,
+      ),
+      child: Hero(
+        tag: pelicula.uniqueIdBanner,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: FadeInImage(
+            placeholder: AssetImage('assets/img/loading.gif'),
+            image: NetworkImage(
+              pelicula.getPosterImg(),
             ),
-          );
-        },
-        itemCount: peliculas.length,
-        layout: SwiperLayout.STACK,
-        itemWidth: _screenSize.width * 0.7,
-        itemHeight: _screenSize.height * 0.5,
+          ),
+        ),
       ),
     );
   }

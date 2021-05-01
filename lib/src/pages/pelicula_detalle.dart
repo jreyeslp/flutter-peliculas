@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:peliculas/src/models/actores_model.dart';
 import 'package:peliculas/src/models/pelicula_model.dart';
@@ -6,7 +7,8 @@ import 'package:peliculas/src/providers/peliculas_provider.dart';
 class PeliculaDetalle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Pelicula pelicula = ModalRoute.of(context).settings.arguments;
+    final Pelicula pelicula =
+        ModalRoute.of(context)!.settings.arguments as Pelicula;
 
     return Scaffold(
       body: CustomScrollView(
@@ -38,20 +40,27 @@ class PeliculaDetalle extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        title: Text(
-          pelicula.title,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
+        title: FadeIn(
+          delay: Duration(milliseconds: 250),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              pelicula.title!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 16.0),
+            ),
           ),
         ),
-        background: FadeInImage(
-          image: NetworkImage(
-            pelicula.getBackgroundImg(),
+        background: Hero(
+          tag: pelicula.uniqueIdBanner,
+          child: FadeInImage(
+            image: NetworkImage(
+              pelicula.getBackgroundImg(),
+            ),
+            placeholder: AssetImage('assets/img/loading.gif'),
+            fadeInDuration: Duration(milliseconds: 150),
+            fit: BoxFit.cover,
           ),
-          placeholder: AssetImage('assets/img/loading.gif'),
-          fadeInDuration: Duration(milliseconds: 150),
-          fit: BoxFit.cover,
         ),
       ),
     );
@@ -83,31 +92,29 @@ class PeliculaDetalle extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  pelicula.originalTitle,
-                  style: Theme.of(context).textTheme.headline6,
-                  overflow: TextOverflow.ellipsis,
+                FadeIn(
+                    delay: Duration(milliseconds: 250),
+                    child: Text(pelicula.originalTitle!,
+                        style: Theme.of(context).textTheme.headline6,
+                        overflow: TextOverflow.ellipsis)),
+                SizedBox(height: 5.0),
+                FadeIn(
+                  delay: Duration(milliseconds: 350),
+                  child: Text(pelicula.originalTitle!,
+                      style: Theme.of(context).textTheme.subtitle2,
+                      overflow: TextOverflow.ellipsis),
                 ),
                 SizedBox(height: 5.0),
-                Text(
-                  pelicula.originalTitle,
-                  style: Theme.of(context).textTheme.subtitle2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(
-                  height: 5.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.star_rate_rounded,
-                      color: Colors.yellow.shade600,
-                    ),
-                    Text(
-                      pelicula.voteAverage.toString(),
-                      style: Theme.of(context).textTheme.subtitle2,
-                    ),
-                  ],
+                FadeIn(
+                  delay: Duration(milliseconds: 450),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.star_rate_rounded,
+                          color: Colors.yellow.shade600),
+                      Text(pelicula.voteAverage.toString(),
+                          style: Theme.of(context).textTheme.subtitle2),
+                    ],
+                  ),
                 )
               ],
             ),
@@ -121,7 +128,7 @@ class PeliculaDetalle extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
       child: Text(
-        pelicula.overview,
+        pelicula.overview!,
         textAlign: TextAlign.justify,
       ),
     );
@@ -134,7 +141,7 @@ class PeliculaDetalle extends StatelessWidget {
       future: provider.getCast(pelicula.id.toString()),
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
         if (snapshot.hasData) {
-          return _createCastWidget(snapshot.data);
+          return _createCastWidget(snapshot.data as List<Actor>);
         } else {
           return Center(
             child: CircularProgressIndicator(),
@@ -147,12 +154,11 @@ class PeliculaDetalle extends StatelessWidget {
   Widget _createCastWidget(List<Actor> cast) {
     return SizedBox(
       height: 200.0,
-      child: PageView.builder(
-        pageSnapping: false,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
         itemCount: cast.length,
         controller: PageController(
           viewportFraction: 0.3,
-          initialPage: 1,
         ),
         itemBuilder: (context, i) {
           return _actorCard(context, cast[i]);
@@ -163,6 +169,8 @@ class PeliculaDetalle extends StatelessWidget {
 
   Widget _actorCard(BuildContext context, Actor actor) {
     return Container(
+      margin: EdgeInsets.only(left: 10),
+      width: 90,
       child: Column(
         children: [
           ClipRRect(
@@ -180,8 +188,8 @@ class PeliculaDetalle extends StatelessWidget {
             height: 5.0,
           ),
           Text(
-            actor.name,
-            style: Theme.of(context).textTheme.bodyText1,
+            actor.name!,
+            style: Theme.of(context).textTheme.bodyText2,
             overflow: TextOverflow.ellipsis,
           ),
         ],
